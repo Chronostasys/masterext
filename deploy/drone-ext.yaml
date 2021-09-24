@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: drone-conf-ext
+  namespace: drone
+  labels:
+    app: drone-conf-ext
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: drone-conf-ext
+  template:
+    metadata:
+      name: drone-conf-ext
+      labels:
+        app: drone-conf-ext
+    spec:
+      containers:
+      - name: drone-conf-ext
+        image: registry.cn-hangzhou.aliyuncs.com/pivotstudio/drone-master-config:latest
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: DRONE_SECRET
+          value: 52630cc8086262781bc6e98cd5e49da4
+        - name: GITHUB_TOKEN
+          valueFrom:
+            secretKeyRef:
+              key: GH_TOKEN
+              name: drone-ext-secret
+        ports:
+        - name: http
+          containerPort: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: drone-conf-ext
+  namespace: drone
+  labels:
+    app: drone-conf-ext
+spec:
+  ports:
+    - name: http
+      port: 3000
+      targetPort: 3000
+  selector:
+    app: drone-conf-ext
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: drone-ext-secret
+  namespace: drone
+type: Opaque
+stringData:
+  GH_TOKEN: "{{GITHUB_TOKEN}}"
