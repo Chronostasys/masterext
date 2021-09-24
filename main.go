@@ -23,8 +23,7 @@ type spec struct {
 
 	// TODO replace or remove these configuration
 	// parameters. They are for demo purposes only.
-	Param1 string `envconfig:"DRONE_PARAM_1"`
-	Param2 string `envconfig:"DRONE_PARAM_2"`
+	Token string `envconfig:"GITHUB_TOKEN"`
 }
 
 func main() {
@@ -48,8 +47,7 @@ func main() {
 		plugin.New(
 			// TODO replace or remove these configuration
 			// parameters. They are for demo purposes only.
-			spec.Param1,
-			spec.Param2,
+			spec.Token,
 		),
 		spec.Secret,
 		logrus.StandardLogger(),

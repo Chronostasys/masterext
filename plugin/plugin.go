@@ -6,53 +6,68 @@ package plugin
 
 import (
 	"context"
+	"fmt"
+	"io"
 
 	"github.com/drone/drone-go/drone"
 	"github.com/drone/drone-go/plugin/config"
+	"github.com/google/go-github/github"
+	"golang.org/x/oauth2"
 )
 
-// TODO replace or remove
-const defaultPipeline = `
-kind: pipeline
-name: default
+// // TODO replace or remove
+// const defaultPipeline = `
+// kind: pipeline
+// name: default
 
-steps:
-- name: build
-  image: golang
-  commands:
-  - go build
-  - go test -v
-`
+// steps:
+// - name: build
+//   image: golang
+//   commands:
+//   - go build
+//   - go test -v
+// `
 
 // New returns a new config plugin.
-func New(param1, param2 string) config.Plugin {
+func New(token string) config.Plugin {
 	return &plugin{
 		// TODO replace or remove these configuration
 		// parameters. They are for demo purposes only.
-		param1: param1,
-		param2: param2,
+		token: token,
 	}
 }
 
 type plugin struct {
 	// TODO replace or remove these configuration
 	// parameters. They are for demo purposes only.
-	param1 string
-	param2 string
+	token string
 }
 
 func (p *plugin) Find(ctx context.Context, req *config.Request) (*drone.Config, error) {
-	// TODO replace or remove
-	// this demonstrates how we can override
-	// and return a custom configuration file
-	if req.Repo.Namespace == "some-organization" {
-		return &drone.Config{
-			Data: defaultPipeline,
-		}, nil
+	// creates a github client used to fetch the yaml.
+	trans := oauth2.NewClient(ctx, oauth2.StaticTokenSource(
+		&oauth2.Token{AccessToken: p.token},
+	))
+	c := github.NewClient(trans)
+	repo, _, err := c.Repositories.Get(ctx, req.Repo.Namespace, req.Repo.Name)
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
 	}
-
-	// return nil and Drone will fallback to
-	// the standard behavior for getting the
-	// configuration file.
-	return nil, nil
+	reader, err := c.Repositories.DownloadContents(ctx, req.Repo.Namespace, req.Repo.Name, ".drone.yml",
+		&github.RepositoryContentGetOptions{
+			Ref: *repo.DefaultBranch,
+		})
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+	bs, err := io.ReadAll(reader)
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+	return &drone.Config{
+		Data: string(bs),
+	}, nil
 }
