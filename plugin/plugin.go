@@ -6,12 +6,12 @@ package plugin
 
 import (
 	"context"
-	"fmt"
 	"io"
 
 	"github.com/drone/drone-go/drone"
 	"github.com/drone/drone-go/plugin/config"
 	"github.com/google/go-github/github"
+	"github.com/sirupsen/logrus"
 	"golang.org/x/oauth2"
 )
 
@@ -48,10 +48,11 @@ func (p *plugin) Find(ctx context.Context, req *config.Request) (*drone.Config, 
 	trans := oauth2.NewClient(ctx, oauth2.StaticTokenSource(
 		&oauth2.Token{AccessToken: p.token},
 	))
+	logrus.Infoln("got request", req)
 	c := github.NewClient(trans)
 	repo, _, err := c.Repositories.Get(ctx, req.Repo.Namespace, req.Repo.Name)
 	if err != nil {
-		fmt.Println(err)
+		logrus.Error(err)
 		return nil, err
 	}
 	reader, err := c.Repositories.DownloadContents(ctx, req.Repo.Namespace, req.Repo.Name, ".drone.yml",
@@ -59,12 +60,12 @@ func (p *plugin) Find(ctx context.Context, req *config.Request) (*drone.Config, 
 			Ref: *repo.DefaultBranch,
 		})
 	if err != nil {
-		fmt.Println(err)
+		logrus.Error(err)
 		return nil, err
 	}
 	bs, err := io.ReadAll(reader)
 	if err != nil {
-		fmt.Println(err)
+		logrus.Error(err)
 		return nil, err
 	}
 	return &drone.Config{

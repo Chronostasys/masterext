@@ -16,4 +16,5 @@ FROM alpine:3.6 as alpine
 RUN set -eux && sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories
 RUN apk add -U --no-cache ca-certificates
 COPY --from=builder /go/bin/app /bin/app
-ENTRYPOINT ["/bin/app"]
+COPY . /
+ENTRYPOINT ["/entry.sh"]
