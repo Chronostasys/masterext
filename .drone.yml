@@ -9,10 +9,14 @@ steps:
 - name: publish
   image: plugins/docker
   settings:
-    auto_tag: true
     repo: registry.cn-hangzhou.aliyuncs.com/pivotstudio/drone-master-config
+    registry: registry.cn-hangzhou.aliyuncs.com
+    cache_from: registry.cn-hangzhou.aliyuncs.com/pivotstudio/drone-master-config:latest
     mtu: 1400
     username: 
       from_secret: docker_user_name
     password: 
       from_secret: docker_pass
+    tags:
+      - latest
+      - build-${DRONE_BUILD_NUMBER} 
