@@ -1,8 +1,5 @@
 #build stage
-FROM golang:alpine AS builder
-RUN set -eux && sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories
-RUN apk add --no-cache git
-RUN apk --no-cache add ca-certificates
+FROM golang:1.17 AS builder
 WORKDIR /go/src/app
 COPY . .
 RUN go env -w GO111MODULE=on

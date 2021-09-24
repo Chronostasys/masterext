@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: drone-conf-ext
-        image: registry.cn-hangzhou.aliyuncs.com/pivotstudio/drone-master-config:latest
+        image: registry.cn-hangzhou.aliyuncs.com/pivotstudio/drone-master-config:v4
         imagePullPolicy: IfNotPresent
         env:
         - name: DRONE_SECRET
