@@ -16,7 +16,8 @@ steps:
   settings:
     auto_tag: true
     repo: registry.cn-hangzhou.aliyuncs.com/pivotstudio/drone-master-config
-    username:
-      from_secret: docker_username
-    password:
-      from_secret: docker_password
+    mtu: 1400
+    username: 
+      from_secret: docker_user_name
+    password: 
+      from_secret: docker_pass
