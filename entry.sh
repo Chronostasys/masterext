@@ -1,4 +1,5 @@
 cd /fastgithub_linux-x64
+export DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
 ./fastgithub>/dev/null &
 sleep 3s
 cp cacert/fastgithub.cer /usr/local/share/ca-certificates/my-cert.crt
