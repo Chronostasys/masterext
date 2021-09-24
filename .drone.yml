@@ -5,11 +5,6 @@ trigger:
   branch:
     - master
 steps:
-- name: build
-  image: golang
-  commands:
-  - go build
-  - go test ./...
 
 - name: publish
   image: plugins/docker
