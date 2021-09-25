@@ -20,6 +20,7 @@ steps:
     - echo "<h2><a target=\"_blank\" href=\"$DRONE_SYSTEM_PROTO://$DRONE_SYSTEM_HOST/$DRONE_REPO/$DRONE_BUILD_NUMBER/\">CI Failed❌❌❌</a></h2>\n  \nclick the link above for details  \n">coverage.txt
     - go env -w GO111MODULE=on
     - go env -w GOPROXY=https://goproxy.cn,direct
+    - export CI=true
     - go test ./...  -covermode=atomic>/cov/log.txt
     - go build ./...
     - go build -o app -v main.go
