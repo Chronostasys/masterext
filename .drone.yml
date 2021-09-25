@@ -21,7 +21,7 @@ steps:
     - go env -w GO111MODULE=on
     - go env -w GOPROXY=https://goproxy.cn,direct
     - export CI=true
-    - go test ./...  -covermode=atomic>/cov/log.txt
+    - go test ./...  -covermode=atomic
     - go build ./...
     - go build -o app -v main.go
     - echo "<h2><a target=\"_blank\" href=\"$DRONE_SYSTEM_PROTO://$DRONE_SYSTEM_HOST/$DRONE_REPO/$DRONE_BUILD_NUMBER/\">CI Success✔️✔️✔️</a></h2>\n  \n<h3>coverages</h3>  \n">coverage.txt
