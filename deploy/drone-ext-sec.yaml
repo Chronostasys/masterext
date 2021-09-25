@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: drone-ext-secret
+  namespace: drone
+type: Opaque
+stringData:
+  GH_TOKEN: "{{GITHUB_TOKEN}}"

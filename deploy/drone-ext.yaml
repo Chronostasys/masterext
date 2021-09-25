@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: drone-conf-ext
-        image: registry.cn-hangzhou.aliyuncs.com/pivotstudio/drone-master-config:v4
+        image: registry.cn-hangzhou.aliyuncs.com/pivotstudio/drone-master-config:{{.build_tag}}
         imagePullPolicy: IfNotPresent
         env:
         - name: DRONE_SECRET
@@ -46,12 +46,3 @@ spec:
       targetPort: 3000
   selector:
     app: drone-conf-ext
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: drone-ext-secret
-  namespace: drone
-type: Opaque
-stringData:
-  GH_TOKEN: "{{GITHUB_TOKEN}}"

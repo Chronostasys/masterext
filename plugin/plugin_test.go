@@ -13,16 +13,20 @@ import (
 )
 
 func TestPlugin(t *testing.T) {
-	t.Skip()
 	p := plugin{
-		token: "<secret>",
+		token: "", // your secret here
 	}
-	conf, _ := p.Find(context.Background(), &config.Request{
+	conf, err := p.Find(context.Background(), &config.Request{
 		Repo: drone.Repo{
 			Namespace: "Pivot-Studio",
-			Name:      "HUSTHoleBackEnd",
+			Name:      "masterext",
+			Config:    ".drone.yml",
 		},
 	})
+	if err != nil {
+		t.Error(err)
+		return
+	}
 	if conf == nil {
 		t.Errorf("conf should not be nil")
 	}
