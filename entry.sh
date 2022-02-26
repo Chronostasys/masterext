@@ -8,5 +8,4 @@ cat cacert/fastgithub.cer >> /etc/ssl/certs/ca-certificates.crt
 update-ca-certificates
 export HTTP_PROXY="http://127.0.0.1:38457"
 export HTTPS_PROXY="http://127.0.0.1:38457"
-/bin/app
 
